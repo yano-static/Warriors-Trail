@@ -3,18 +3,26 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Campus Map - Warrior’s Trail</title>
+  <title>View Map | Warrior’s Trail</title>
   <link rel="stylesheet" href="style.css">
+
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
 </head>
 <body>
+  <!-- Header -->
   <header>
-    <div class="header-logos">
+    <div class="logo-container">
       <img src="img/ue-logo.png" alt="UE Logo" class="logo">
       <img src="img/warriors-trail-logo.png" alt="Warrior’s Trail Logo" class="logo">
     </div>
-    <h1>Interactive Campus Map</h1>
+    <div class="header-text">
+      <h1>Warrior’s Trail</h1>
+      <p class="subtitle">Lost and Found Map Tracker</p>
+    </div>
   </header>
 
+  <!-- Navigation -->
   <nav>
     <ul>
       <li><a href="index.html">Home</a></li>
@@ -24,22 +32,44 @@
     </ul>
   </nav>
 
+  <!-- Main Content -->
   <main class="container">
     <section>
-      <h2>Click on the map to tag an item location</h2>
-      <img src="img/ue-campus-map.png" id="campus-map" alt="UE Campus Map" class="map-img">
+      <h2>Interactive Campus Map</h2>
+      <p>Explore the UE campus map. Lost items can be marked on this map.</p>
+      <div id="map"></div>
     </section>
   </main>
 
+  <!-- Footer -->
   <footer>
-    <p>&copy; 2025 Warrior’s Trail | University of the East</p>
+    <p>&copy; 2025 Warrior’s Trail | University Lost & Found System</p>
   </footer>
 
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
   <script>
-    const map = document.getElementById("campus-map");
-    map.addEventListener("click", function(e) {
-      alert("You clicked at X: " + e.offsetX + " Y: " + e.offsetY);
+    // Create map without base tiles
+    var map = L.map('map', {
+      crs: L.CRS.Simple, // simple 2D coordinate system
+      minZoom: -1
     });
+
+    // Dimensions of your image (change to actual width & height in pixels)
+    var mapWidth = 2000, mapHeight = 1500;
+
+    // Define image bounds
+    var bounds = [[0,0], [mapHeight, mapWidth]];
+
+    // Add image as map layer
+    var image = L.imageOverlay('img/campus-map.png', bounds).addTo(map);
+
+    // Fit map view to image
+    map.fitBounds(bounds);
+
+    // Example marker
+    var marker = L.marker([750, 1000]).addTo(map)
+      .bindPopup("<b>Lost Item Example</b><br>Near Main Gate.");
   </script>
 </body>
 </html>
