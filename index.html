@@ -5,19 +5,25 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Warrior’s Trail: Lost and Found Map Tracker</title>
   <link rel="stylesheet" href="style.css">
+
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
 </head>
 <body>
   <header>
+    <img src="https://www.ue.edu.ph/mla/wp-content/uploads/2019/07/UE-LOGO.png" alt="UE Logo" class="logo">
     <h1>Warrior’s Trail: Lost and Found Map Tracker</h1>
   </header>
 
   <main>
-    <p>Welcome! This site helps students report and find lost items on campus.</p>
+    <p class="intro">Welcome! This site helps students report and find lost items on campus.</p>
     
-    <!-- Example map placeholder -->
+    <!-- Real Map -->
     <div id="map"></div>
   </main>
 
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
