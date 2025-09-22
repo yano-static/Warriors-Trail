@@ -1,33 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Warrior’s Trail — Map</title>
-
-  <link rel="stylesheet" href="style.css" />
-
-  <!-- Leaflet CSS -->
-  <link
-    rel="stylesheet"
-    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
-    crossorigin=""
-  />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Campus Map - Warrior’s Trail</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header class="site-header">
-    <div class="container header-inner">
-      <img src="ue-seal.png" alt="UE Seal" class="logo">
-      <div>
-        <h1>Warrior’s Trail</h1>
-        <p class="subtitle">Lost & Found Map Tracker</p>
-      </div>
+  <header>
+    <div class="header-logos">
+      <img src="img/ue-logo.png" alt="UE Logo" class="logo">
+      <img src="img/warriors-trail-logo.png" alt="Warrior’s Trail Logo" class="logo">
     </div>
+    <h1>Interactive Campus Map</h1>
   </header>
 
-  <nav class="site-nav">
-    <ul class="nav-list">
+  <nav>
+    <ul>
       <li><a href="index.html">Home</a></li>
       <li><a href="report.html">Report Item</a></li>
       <li><a href="map.html" class="active">View Map</a></li>
@@ -36,51 +25,21 @@
   </nav>
 
   <main class="container">
-    <section class="map-controls">
-      <div class="search-row">
-        <input id="searchInput" placeholder="Search descriptions or contact..." />
-        <select id="filterType">
-          <option value="all">All types</option>
-          <option value="phone">Phone</option>
-          <option value="wallet">Wallet</option>
-          <option value="keys">Keys</option>
-          <option value="other">Other</option>
-        </select>
-        <button id="clearBtn">Clear Filters</button>
-      </div>
-      <div class="legend">
-        <strong>Legend:</strong>
-        <span class="legend-item"><span class="emoji">📱</span> Phone</span>
-        <span class="legend-item"><span class="emoji">💼</span> Wallet</span>
-        <span class="legend-item"><span class="emoji">🔑</span> Keys</span>
-        <span class="legend-item"><span class="emoji">📦</span> Other</span>
-      </div>
-    </section>
-
     <section>
-      <div id="map" aria-label="Campus map"></div>
-    </section>
-
-    <section class="recent container">
-      <h3>Recent Reports</h3>
-      <ul id="reportsList" class="reports-list"></ul>
+      <h2>Click on the map to tag an item location</h2>
+      <img src="img/ue-campus-map.png" id="campus-map" alt="UE Campus Map" class="map-img">
     </section>
   </main>
 
-  <footer class="site-footer">
-    <div class="container">
-      <p>&copy; 2025 Warrior’s Trail | University of the East — Prototype (local demo)</p>
-    </div>
+  <footer>
+    <p>&copy; 2025 Warrior’s Trail | University of the East</p>
   </footer>
 
-  <!-- Leaflet JS -->
-  <script
-    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
-    crossorigin=""
-  ></script>
-
-  <!-- custom script -->
-  <script src="script.js"></script>
+  <script>
+    const map = document.getElementById("campus-map");
+    map.addEventListener("click", function(e) {
+      alert("You clicked at X: " + e.offsetX + " Y: " + e.offsetY);
+    });
+  </script>
 </body>
 </html>
