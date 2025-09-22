@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Warrior’s Trail: Lost and Found Map Tracker</title>
   <link rel="stylesheet" href="style.css">
+
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
 </head>
 <body>
   <!-- Header -->
@@ -37,7 +40,7 @@
 
     <section class="map-section">
       <h2>Interactive Map</h2>
-      <div class="map-box">Interactive map will go here!</div>
+      <div id="map"></div>
     </section>
   </main>
 
@@ -45,5 +48,9 @@
   <footer>
     <p>&copy; 2025 Warrior’s Trail | University Lost & Found System</p>
   </footer>
+
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
