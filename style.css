@@ -1,8 +1,71 @@
+/* General layout */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background: #f9f9f9;
+  color: #333;
+}
+
+header {
+  background: #800000;
+  color: white;
+  padding: 20px 0;
+  text-align: center;
+}
+
+header .subtitle {
+  font-size: 1.2em;
+  font-weight: lighter;
+}
+
+nav {
+  background: #333;
+}
+
+nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+}
+
+nav li {
+  margin: 0;
+}
+
+nav a {
+  display: block;
+  padding: 14px 20px;
+  color: white;
+  text-decoration: none;
+}
+
+nav a:hover {
+  background: #575757;
+}
+
+.container {
+  max-width: 900px;
+  margin: 20px auto;
+  padding: 0 20px;
+}
+
 /* Map */
 #map {
   width: 100%;
-  height: 400px;
+  height: 400px;   /* important! */
   border: 2px solid #ccc;
   border-radius: 10px;
   margin-top: 15px;
+}
+
+/* Footer */
+footer {
+  background: #333;
+  color: white;
+  text-align: center;
+  padding: 10px 0;
+  margin-top: 20px;
 }
