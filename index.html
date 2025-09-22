@@ -1,67 +1,73 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Warrior’s Trail: Lost and Found Map Tracker</title>
-  <link rel="stylesheet" href="style.css">
-
-  <!-- ✅ Leaflet CSS (with integrity & crossorigin) -->
-  <link
-    rel="stylesheet"
-    href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
-    crossorigin=""
-  />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Warrior’s Trail — Home</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <!-- Header -->
-  <header>
-    <div class="container">
-      <h1>Warrior’s Trail</h1>
-      <p class="subtitle">Lost and Found Map Tracker</p>
+  <header class="site-header">
+    <div class="container header-inner">
+      <img src="ue-seal.png" alt="UE Seal" class="logo">
+      <div>
+        <h1>Warrior’s Trail</h1>
+        <p class="subtitle">Lost & Found Map Tracker — University of the East</p>
+      </div>
     </div>
   </header>
 
-  <!-- Navigation -->
-  <nav>
-    <ul>
-      <li><a href="#">Home</a></li>
-      <li><a href="#">Report Item</a></li>
-      <li><a href="#">View Map</a></li>
-      <li><a href="#">About</a></li>
+  <nav class="site-nav">
+    <ul class="nav-list">
+      <li><a href="index.html" class="active">Home</a></li>
+      <li><a href="report.html">Report Item</a></li>
+      <li><a href="map.html">View Map</a></li>
+      <li><a href="about.html">About</a></li>
     </ul>
   </nav>
 
-  <!-- Main Content -->
   <main class="container">
-    <section>
-      <h2>Welcome!</h2>
+    <section class="hero">
+      <h2>Recover what’s lost — faster</h2>
       <p>
-        This site helps students report and find lost items on campus. 
-        Use the interactive map below to check for recently reported items.
+        Warrior’s Trail is a student-focused interactive platform for reporting and finding
+        lost items across UE campus. Tag the exact spot on the campus map, add details,
+        and search reported items — all in one place.
+      </p>
+      <p class="cta">
+        <a class="button" href="report.html">Report an Item</a>
+        <a class="button outline" href="map.html">View Map</a>
       </p>
     </section>
 
-    <section class="map-section">
-      <h2>Interactive Map</h2>
-      <div id="map"></div>
+    <section class="features">
+      <article>
+        <h3>Easy reporting</h3>
+        <p>Fill a short form and tap the map to mark the exact location where you lost or found an item.</p>
+      </article>
+      <article>
+        <h3>Campus-limited map</h3>
+        <p>The interactive map is limited to UE campus bounds so students stay focused on relevant areas.</p>
+      </article>
+      <article>
+        <h3>Search & Filters</h3>
+        <p>Quickly filter items by type (phone, wallet, keys, etc.) and search descriptions.</p>
+      </article>
+    </section>
+
+    <section class="vision">
+      <h3>Why this helps</h3>
+      <p>
+        Many items are never reclaimed because there’s no central, searchable system. This platform
+        reduces friction, helps students cooperate, and improves the chance items are reunited with their owners.
+      </p>
     </section>
   </main>
 
-  <!-- Footer -->
-  <footer>
-    <p>&copy; 2025 Warrior’s Trail | University Lost & Found System</p>
+  <footer class="site-footer">
+    <div class="container">
+      <p>&copy; 2025 Warrior’s Trail | University of the East — Prototype (local demo)</p>
+    </div>
   </footer>
-
-  <!-- ✅ Leaflet JS (with integrity & crossorigin) -->
-  <script
-    src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
-    crossorigin=""
-  ></script>
-
-  <!-- Your custom script -->
-  <script src="script.js"></script>
 </body>
 </html>
