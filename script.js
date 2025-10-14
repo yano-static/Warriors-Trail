@@ -1,65 +1,75 @@
-// --- Page: map.html ---
-if (document.getElementById('map') && location.pathname.endsWith('map.html')) {
-  // shared constants
+// --- Page: report.html ---
+if (document.getElementById('reportForm') && location.pathname.endsWith('report.html')) {
   const UE_CENTER = [14.6070, 121.0040];
   const UE_BOUNDS = [
     [14.6050, 121.0020],
     [14.6090, 121.0060]
   ];
 
-  // icon dictionary
-  function createIcon(emoji) {
-    return L.divIcon({
-      className: 'custom-emoji-icon',
-      html: `<div style="font-size:20px">${emoji}</div>`,
-      iconSize: [28, 28],
-      iconAnchor: [14, 28]
-    });
-  }
   const ICONS = {
-    phone: createIcon('📱'),
-    wallet: createIcon('💼'),
-    keys: createIcon('🔑'),
-    other: createIcon('📦')
+    phone: L.divIcon({ className: 'custom-emoji-icon', html: '📱', iconSize: [28, 28], iconAnchor: [14, 28] }),
+    wallet: L.divIcon({ className: 'custom-emoji-icon', html: '💼', iconSize: [28, 28], iconAnchor: [14, 28] }),
+    keys: L.divIcon({ className: 'custom-emoji-icon', html: '🔑', iconSize: [28, 28], iconAnchor: [14, 28] }),
+    other: L.divIcon({ className: 'custom-emoji-icon', html: '📦', iconSize: [28, 28], iconAnchor: [14, 28] })
   };
 
-  // map setup
-  const map = L.map('map', { minZoom: 16, maxZoom: 20 }).setView(UE_CENTER, 17);
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; OpenStreetMap contributors'
-  }).addTo(map);
+  const form = document.getElementById('reportForm');
+  const latInput = document.getElementById('lat');
+  const lngInput = document.getElementById('lng');
 
-  map.setMaxBounds(UE_BOUNDS);
-  map.on('drag', () => map.panInsideBounds(UE_BOUNDS, { animate: true }));
+  // mini map for picking location
+  const miniMap = L.map('miniMap', { minZoom: 16, maxZoom: 20 }).setView(UE_CENTER, 17);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(miniMap);
+  miniMap.setMaxBounds(UE_BOUNDS);
+  miniMap.on('drag', () => miniMap.panInsideBounds(UE_BOUNDS, { animate: true }));
 
-  // helper for safe HTML
-  function escapeHtml(s) {
-    if (!s) return '';
-    return s.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'''}[c]));
+  let pickMarker = null;
+  function setPicker(lat, lng) {
+    latInput.value = lat;
+    lngInput.value = lng;
+    if (pickMarker) pickMarker.setLatLng([lat, lng]);
+    else pickMarker = L.marker([lat, lng], { icon: ICONS.other }).addTo(miniMap);
+    miniMap.panTo([lat, lng]);
   }
 
-  // show Firebase items on map
-  function addReportMarker(report) {
-    const icon = ICONS[report.type] || ICONS.other;
-    const marker = L.marker([report.lat, report.lng], { icon }).addTo(map);
-    const time = report.timestamp
-      ? new Date(report.timestamp).toLocaleString()
-      : '';
-    const popupHtml = `
-      <strong>${escapeHtml(report.itemName)}</strong> <em>(${report.type})</em><br/>
-      ${report.description ? `<div>${escapeHtml(report.description)}</div>` : ''}
-      ${report.contact ? `<div><small>Contact: ${escapeHtml(report.contact)}</small></div>` : ''}
-      <div style="margin-top:6px"><small>${time}</small></div>
-    `;
-    marker.bindPopup(popupHtml);
-  }
+  // Map click: pick location
+  miniMap.on('click', function(e) {
+    setPicker(e.latlng.lat, e.latlng.lng);
+  });
+  setPicker(UE_CENTER[0], UE_CENTER[1]);
 
-  db.ref("items").on("value", (snapshot) => {
-    // Remove markers only
-    map.eachLayer(layer => {
-      if (layer instanceof L.Marker) map.removeLayer(layer);
+  // Submit to Firebase
+  form.addEventListener('submit', function(evt) {
+    evt.preventDefault();
+    const type = document.getElementById('itemType').value;
+    const itemName = document.getElementById('itemName').value.trim();
+    const contact = document.getElementById('contact').value.trim();
+    const description = document.getElementById('description').value.trim();
+    const lat = parseFloat(latInput.value);
+    const lng = parseFloat(lngInput.value);
+
+    if (!itemName || !lat || !lng) {
+      alert('Please provide item name and pick a location on the map.');
+      return;
+    }
+
+    const newReport = {
+      type,
+      itemName,
+      contact,
+      description,
+      lat,
+      lng,
+      timestamp: Date.now()
+    };
+
+    db.ref("items").push(newReport, function(error) {
+      if (error) {
+        alert('Failed to save report. Please try again.');
+      } else {
+        alert('Report submitted! You can view it on the Map page.');
+        window.location.href = 'map.html';
+      }
     });
-    // Display reports from Firebase
-    snapshot.forEach(child => addReportMarker(child.val()));
   });
 }
