@@ -8,3 +8,7 @@ const firebaseConfig = {
   appId: "1:187592091783:web:cb8ce312d1026e0f4fb022",
   measurementId: "G-0LQHP3VVZN"
 };
+
+// initialize ngarod
+const app = firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
