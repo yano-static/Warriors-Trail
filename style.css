@@ -1,100 +1,118 @@
-/* General Reset */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-body {
-  font-family: Arial, sans-serif;
-  line-height: 1.6;
-  background-color: #f9f9f9;
-  color: #333;
-}
-
-/* Header */
+/* --- Header and Navbar --- */
 header {
-  background-color: #800000; /* UE Maroon */
-  color: white;
-  padding: 15px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  background: #B50014;
+  color: #fff;
+  padding: 10px 0;
+  box-shadow: 0 2px 6px #ccc;
+  position: sticky;
+  top: 0;
+  z-index: 100;
 }
-
-.logo-container {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-}
-
-.logo {
-  height: 60px;
-  width: auto;
-}
-
-.header-text {
-  text-align: right;
-}
-
-.subtitle {
-  font-size: 0.9em;
-  font-weight: 300;
-}
-
-/* Navigation */
-nav {
-  background-color: #333;
-}
-
 nav ul {
   display: flex;
+  gap: 30px;
   justify-content: center;
   list-style: none;
+  padding: 0;
+  margin: 0;
+  background: #f4f4f4;
+  border-bottom: 1px solid #ddd;
 }
-
-nav ul li {
-  margin: 0 15px;
-}
-
-nav ul li a {
-  color: white;
+nav a {
+  color: #B50014;
   text-decoration: none;
-  padding: 10px 15px;
-  display: block;
+  padding: 12px 10px;
+  transition: background 0.2s;
+}
+nav a.active,
+nav a:hover {
+  background: #ffd6da;
+  border-radius: 6px;
+  text-decoration: underline;
 }
 
-nav ul li a:hover {
-  background-color: #800000;
-  border-radius: 5px;
-}
-
-/* Main Container */
+/* --- Container and Card --- */
 .container {
-  width: 90%;
-  max-width: 1000px;
-  margin: 20px auto;
-}
-
-/* Map Section */
-.map-section {
-  text-align: center;
-  margin-top: 20px;
-}
-
-.campus-map {
-  width: 100%;
   max-width: 900px;
-  border: 3px solid #800000;
+  margin: 30px auto;
+  background: #fff;
+  padding: 32px;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px #e0e0e0;
+}
+.card {
+  background: #faf8f8;
   border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  padding: 18px 18px 12px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 6px #e0e0e0;
 }
 
-/* Footer */
+/* --- Map Styling --- */
+#map, #miniMap {
+  border-radius: 12px;
+  box-shadow: 0 2px 8px #bbb;
+  min-height: 400px;
+  width: 100%;
+}
+
+/* --- Filter/Search Bar --- */
+.filter-bar {
+  display: flex;
+  gap: 16px;
+  margin-bottom: 18px;
+  align-items: center;
+}
+input[type="search"], select, button {
+  font-size: 1rem;
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  outline: none;
+}
+button#clearBtn {
+  background: #B50014;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+button#clearBtn:hover {
+  background: #900010;
+}
+
+/* --- Report Card --- */
+.report-card {
+  border-left: 4px solid #B50014;
+  background: #fff;
+  padding: 16px;
+  margin-bottom: 12px;
+  border-radius: 8px;
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  box-shadow: 0 1px 6px #eee;
+}
+.report-card .emoji {
+  font-size: 1.5em;
+  margin-right: 10px;
+}
+
+/* --- Footer --- */
 footer {
+  background: #f4f4f4;
+  color: #B50014;
+  padding: 12px 0;
   text-align: center;
-  background-color: #333;
-  color: white;
-  padding: 10px;
-  margin-top: 30px;
+  border-top: 1px solid #e0e0e0;
+  font-size: 0.95em;
+  margin-top: 40px;
+}
+
+/* --- Mobile Responsive --- */
+@media (max-width: 700px) {
+  .container { padding: 12px; }
+  .filter-bar { flex-direction: column; gap: 10px; }
+  #map { min-height: 250px; }
+  .report-card { flex-direction: column; gap: 4px; }
 }
