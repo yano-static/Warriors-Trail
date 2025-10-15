@@ -8,6 +8,30 @@ header {
   top: 0;
   z-index: 100;
 }
+.logo-container {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  justify-content: center;
+  padding-bottom: 6px;
+}
+.logo {
+  height: 38px;
+}
+.header-text {
+  text-align: center;
+  margin-bottom: 10px;
+}
+.header-text h1 {
+  margin: 0;
+  font-size: 2em;
+  font-weight: 700;
+}
+.subtitle {
+  font-size: 1.1em;
+  font-weight: 400;
+}
+
 nav ul {
   display: flex;
   gap: 30px;
@@ -23,11 +47,12 @@ nav a {
   text-decoration: none;
   padding: 12px 10px;
   transition: background 0.2s;
+  font-size: 1.07em;
+  border-radius: 6px;
 }
 nav a.active,
 nav a:hover {
   background: #ffd6da;
-  border-radius: 6px;
   text-decoration: underline;
 }
 
@@ -44,58 +69,35 @@ nav a:hover {
   background: #faf8f8;
   border-radius: 10px;
   padding: 18px 18px 12px;
-  margin-bottom: 20px;
-  box-shadow: 0 2px 6px #e0e0e0;
+  margin-bottom: 22px;
+  box-shadow: 0 2px 8px #e0e0e0;
 }
 
-/* --- Map Styling --- */
-#map, #miniMap {
-  border-radius: 12px;
-  box-shadow: 0 2px 8px #bbb;
-  min-height: 400px;
-  width: 100%;
-}
-
-/* --- Filter/Search Bar --- */
-.filter-bar {
-  display: flex;
-  gap: 16px;
-  margin-bottom: 18px;
-  align-items: center;
-}
-input[type="search"], select, button {
-  font-size: 1rem;
-  padding: 8px 12px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  outline: none;
-}
-button#clearBtn {
+/* --- Buttons --- */
+.action-btn {
+  display: inline-block;
+  margin: 13px 10px;
+  padding: 14px 30px;
   background: #B50014;
   color: #fff;
+  border-radius: 6px;
+  font-weight: 700;
+  font-size: 1.05em;
+  text-decoration: none;
   border: none;
-  cursor: pointer;
-  transition: background 0.2s;
+  transition: background 0.2s, color 0.2s;
 }
-button#clearBtn:hover {
+.action-btn:hover {
   background: #900010;
+  color: #fff;
 }
-
-/* --- Report Card --- */
-.report-card {
-  border-left: 4px solid #B50014;
+.action-btn.outlined {
   background: #fff;
-  padding: 16px;
-  margin-bottom: 12px;
-  border-radius: 8px;
-  display: flex;
-  gap: 14px;
-  align-items: center;
-  box-shadow: 0 1px 6px #eee;
+  color: #B50014;
+  border: 2px solid #B50014;
 }
-.report-card .emoji {
-  font-size: 1.5em;
-  margin-right: 10px;
+.action-btn.outlined:hover {
+  background: #ffd6da;
 }
 
 /* --- Footer --- */
@@ -111,8 +113,9 @@ footer {
 
 /* --- Mobile Responsive --- */
 @media (max-width: 700px) {
-  .container { padding: 12px; }
-  .filter-bar { flex-direction: column; gap: 10px; }
-  #map { min-height: 250px; }
-  .report-card { flex-direction: column; gap: 4px; }
+  .container { padding: 14px; }
+  .card { padding: 13px 10px 8px; }
+  nav ul { gap: 12px; font-size: 0.97em; }
+  .logo { height: 32px; }
+  .header-text h1 { font-size: 1.3em; }
 }
