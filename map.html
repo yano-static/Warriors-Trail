@@ -32,14 +32,30 @@
     </ul>
   </nav>
 
-  <!-- Main Content -->
+  <!-- Main Content - REPLACED/UPGRADED PART -->
   <main class="container">
     <section>
       <h2>Interactive Campus Map</h2>
       <p>Explore the UE campus map. Lost items can be marked on this map.</p>
+
+      <!-- Filter/Search Controls -->
+      <div class="filter-bar">
+        <select id="filterType">
+          <option value="all">All</option>
+          <option value="phone">Phone</option>
+          <option value="wallet">Wallet</option>
+          <option value="keys">Keys</option>
+          <option value="other">Other</option>
+        </select>
+        <input type="search" id="searchInput" placeholder="Search reports" />
+        <button id="clearBtn">Clear</button>
+      </div>
+
       <div id="map"></div>
+      <ul id="reportsList" style="list-style:none; padding:0; margin-top:20px;"></ul>
     </section>
   </main>
+  <!-- END OF REPLACED/UPGRADED PART -->
 
   <!-- Footer -->
   <footer>
@@ -48,33 +64,10 @@
 
   <!-- Leaflet JS -->
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-  <script>
-    // Create map without base tiles
-    var map = L.map('map', {
-      crs: L.CRS.Simple, // simple 2D coordinate system
-      minZoom: -1
-    });
-
-    // Dimensions of your image (change to actual width & height in pixels)
-    var mapWidth = 2000, mapHeight = 1500;
-
-    // Define image bounds
-    var bounds = [[0,0], [mapHeight, mapWidth]];
-
-    // Add image as map layer
-    var image = L.imageOverlay('img/campus-map.png', bounds).addTo(map);
-
-    // Fit map view to image
-    map.fitBounds(bounds);
-
-    // Example marker
-    var marker = L.marker([750, 1000]).addTo(map)
-      .bindPopup("<b>Lost Item Example</b><br>Near Main Gate.");
-  </script>
-    <!-- Firebase JS SDKs -->
-<script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database-compat.js"></script>
-<script src="firebase-config.js"></script>
-<script src="script.js"></script>
+  <!-- Firebase JS SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database-compat.js"></script>
+  <script src="firebase-config.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
