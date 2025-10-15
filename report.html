@@ -1,87 +1,119 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Report Item | Warrior’s Trail</title>
-  <link rel="stylesheet" href="style.css">
-  <!-- Leaflet CSS -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+  <meta charset="UTF-8" />
+  <title>Report Item | Warrior's Trail</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <style>
+    #map {
+      width: 100%;
+      height: 600px;
+      margin-bottom: 20px;
+    }
+    .form-control {
+      margin-bottom: 8px;
+      width: 100%;
+      box-sizing: border-box;
+      padding: 6px;
+    }
+    .leaflet-container {
+      cursor: crosshair;
+    }
+    .item-form {
+      max-width: 360px;
+      margin-bottom: 18px;
+    }
+    .item-form label {
+      font-weight: bold;
+      display: block;
+      margin-top: 8px;
+    }
+  </style>
 </head>
 <body>
-  <!-- Header -->
-  <header>
-    <div class="logo-container">
-      <img src="img/ue-logo.png" alt="UE Logo" class="logo">
-      <img src="img/warriors-trail-logo.png" alt="Warrior’s Trail Logo" class="logo">
-    </div>
-    <div class="header-text">
-      <h1>Report Lost or Found Item</h1>
-      <p class="subtitle">Mark campus location and submit item details below</p>
-    </div>
-  </header>
+  <h2>Report Lost or Found Item</h2>
+  <div>Mark campus location and submit item details below</div>
+  <div id="map"></div>
+  <form id="itemForm" class="item-form">
+    <label for="itemType">Type:</label>
+    <select id="itemType" class="form-control" required>
+      <option value="Phone">Phone</option>
+      <option value="Wallet">Wallet</option>
+      <option value="Keys">Keys</option>
+      <option value="Other">Other</option>
+    </select>
 
-  <!-- Navigation -->
-  <nav>
-    <ul>
-      <li><a href="index.html">Home</a></li>
-      <li><a href="report.html" class="active">Report Item</a></li>
-      <li><a href="map.html">View Map</a></li>
-      <li><a href="about.html">About</a></li>
-    </ul>
-  </nav>
+    <label for="itemName">Item Name:</label>
+    <input id="itemName" class="form-control" required />
 
-  <main class="container">
-    <section>
-      <div class="card">
-        <h2>Report Lost or Found Item</h2>
-        <form id="reportForm">
-          <div style="margin-bottom: 16px;">
-            <label for="itemType">Type:</label>
-            <select id="itemType" required>
-              <option value="phone">Phone</option>
-              <option value="wallet">Wallet</option>
-              <option value="keys">Keys</option>
-              <option value="other">Other</option>
-            </select>
-          </div>
-          <div style="margin-bottom: 16px;">
-            <label for="itemName">Item Name:</label>
-            <input type="text" id="itemName" required placeholder="e.g. Blue umbrella" />
-          </div>
-          <div style="margin-bottom: 16px;">
-            <label for="description">Description:</label>
-            <input type="text" id="description" placeholder="Description (optional)" />
-          </div>
-          <div style="margin-bottom: 16px;">
-            <label for="contact">Contact:</label>
-            <input type="text" id="contact" required placeholder="Your email or phone" />
-          </div>
-          <div style="margin-bottom: 16px;">
-            <label>Pin Location:</label>
-            <div id="miniMap" style="height:250px; width:100%; margin:10px 0; border-radius:10px;"></div>
-            <input type="hidden" id="lat" />
-            <input type="hidden" id="lng" />
-            <small>Click the campus map to choose item location.</small>
-          </div>
-          <button style="background:#B50014;color:#fff; border:none; padding:12px 24px; border-radius:5px;">
-            Submit Report
-          </button>
-        </form>
-      </div>
-    </section>
-  </main>
+    <label for="itemDesc">Description:</label>
+    <input id="itemDesc" class="form-control" />
 
-  <footer>
-    <p>&copy; 2025 Warrior’s Trail | University Lost & Found System</p>
-  </footer>
+    <label for="itemContact">Contact:</label>
+    <input id="itemContact" class="form-control" required />
 
-  <!-- Leaflet JS -->
+    <input type="hidden" id="itemLat" />
+    <input type="hidden" id="itemLng" />
+
+    <button type="submit" class="form-control" style="background:#2d8be0;color:#fff;">Submit Report</button>
+  </form>
+
+  <div id="reportResult"></div>
+
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-  <!-- Firebase JS SDKs -->
-  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database-compat.js"></script>
-  <script src="firebase-config.js"></script>
-  <script src="script.js"></script>
+  <script>
+    // Change these to your image's true pixel dimensions
+    var imgWidth = 1118; // image.jpg width in pixels
+    var imgHeight = 768; // image.jpg height in pixels
+
+    var map = L.map('map', {
+      crs: L.CRS.Simple,
+      minZoom: -2,
+      maxZoom: 2,
+      zoom: 0,
+      center: [imgHeight/2, imgWidth/2]
+    });
+
+    var bounds = [[0,0], [imgHeight, imgWidth]];
+    var image = L.imageOverlay('image.jpg', bounds).addTo(map);
+    map.fitBounds(bounds);
+
+    var marker;
+
+    map.on('click', function(e) {
+      if(marker) map.removeLayer(marker);
+      marker = L.marker(e.latlng).addTo(map);
+      document.getElementById('itemLat').value = Math.round(e.latlng.lat);
+      document.getElementById('itemLng').value = Math.round(e.latlng.lng);
+    });
+
+    document.getElementById('itemForm').onsubmit = function(event) {
+      event.preventDefault();
+      let type = document.getElementById('itemType').value;
+      let name = document.getElementById('itemName').value;
+      let desc = document.getElementById('itemDesc').value;
+      let contact = document.getElementById('itemContact').value;
+      let lat = document.getElementById('itemLat').value;
+      let lng = document.getElementById('itemLng').value;
+
+      if(!lat || !lng) {
+        alert('Click the map to pin the item location!');
+        return;
+      }
+
+      // Show result (you can replace this with AJAX for backend save)
+      document.getElementById('reportResult').innerHTML =
+        `<b>Report submitted!</b><br>` +
+        `Type: ${type}<br>` +
+        `Name: ${name}<br>` +
+        `Description: ${desc}<br>` +
+        `Contact: ${contact}<br>` +
+        `Pinned Location: Y=${lat}, X=${lng}`;
+      // Optionally, reset form here
+      // event.target.reset();
+      // if(marker) map.removeLayer(marker);
+    };
+  </script>
 </body>
 </html>
