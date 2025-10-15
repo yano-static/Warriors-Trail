@@ -3,18 +3,25 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Report Item - Warrior’s Trail</title>
+  <title>Report Item | Warrior’s Trail</title>
   <link rel="stylesheet" href="style.css">
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
 </head>
 <body>
+  <!-- Header -->
   <header>
-    <div class="header-logos">
+    <div class="logo-container">
       <img src="img/ue-logo.png" alt="UE Logo" class="logo">
       <img src="img/warriors-trail-logo.png" alt="Warrior’s Trail Logo" class="logo">
     </div>
-    <h1>Report Lost or Found Item</h1>
+    <div class="header-text">
+      <h1>Report Lost or Found Item</h1>
+      <p class="subtitle">Mark campus location and submit item details below</p>
+    </div>
   </header>
 
+  <!-- Navigation -->
   <nav>
     <ul>
       <li><a href="index.html">Home</a></li>
@@ -26,40 +33,55 @@
 
   <main class="container">
     <section>
-      <h2>Submit an Item</h2>
-      <form class="report-form">
-        <label for="type">Item Type:</label>
-        <select id="type" name="type">
-          <option value="lost">Lost</option>
-          <option value="found">Found</option>
-        </select>
-
-        <label for="item-name">Item Name:</label>
-        <input type="text" id="item-name" name="item-name" placeholder="e.g., Wallet, Umbrella" required>
-
-        <label for="description">Description:</label>
-        <textarea id="description" name="description" rows="4" placeholder="Describe the item..."></textarea>
-
-        <label for="location">Location:</label>
-        <input type="text" id="location" name="location" placeholder="e.g., Library, Quadrangle" required>
-
-        <label for="date">Date:</label>
-        <input type="date" id="date" name="date" required>
-
-        <button type="submit">Submit Report</button>
-      </form>
+      <div class="card">
+        <h2>Report Lost or Found Item</h2>
+        <form id="reportForm">
+          <div style="margin-bottom: 16px;">
+            <label for="itemType">Type:</label>
+            <select id="itemType" required>
+              <option value="phone">Phone</option>
+              <option value="wallet">Wallet</option>
+              <option value="keys">Keys</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+          <div style="margin-bottom: 16px;">
+            <label for="itemName">Item Name:</label>
+            <input type="text" id="itemName" required placeholder="e.g. Blue umbrella" />
+          </div>
+          <div style="margin-bottom: 16px;">
+            <label for="description">Description:</label>
+            <input type="text" id="description" placeholder="Description (optional)" />
+          </div>
+          <div style="margin-bottom: 16px;">
+            <label for="contact">Contact:</label>
+            <input type="text" id="contact" required placeholder="Your email or phone" />
+          </div>
+          <div style="margin-bottom: 16px;">
+            <label>Pin Location:</label>
+            <div id="miniMap" style="height:250px; width:100%; margin:10px 0; border-radius:10px;"></div>
+            <input type="hidden" id="lat" />
+            <input type="hidden" id="lng" />
+            <small>Click the campus map to choose item location.</small>
+          </div>
+          <button style="background:#B50014;color:#fff; border:none; padding:12px 24px; border-radius:5px;">
+            Submit Report
+          </button>
+        </form>
+      </div>
     </section>
   </main>
 
   <footer>
-    <p>&copy; 2025 Warrior’s Trail | University of the East</p>
+    <p>&copy; 2025 Warrior’s Trail | University Lost & Found System</p>
   </footer>
 
-  <script>
-    document.querySelector(".report-form").addEventListener("submit", function(e) {
-      e.preventDefault();
-      alert("Thank you! Your report has been submitted.");
-    });
-  </script>
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <!-- Firebase JS SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-database-compat.js"></script>
+  <script src="firebase-config.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
