@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Warrior’s Trail: Lost and Found Map Tracker</title>
+  <title>Home | Warrior’s Trail</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -14,38 +14,46 @@
       <img src="img/warriors-trail-logo.png" alt="Warrior’s Trail Logo" class="logo">
     </div>
     <div class="header-text">
-      <h1>Warrior’s Trail</h1>
-      <p class="subtitle">Lost and Found Map Tracker</p>
+      <h1>Welcome to Warrior’s Trail</h1>
+      <p class="subtitle">Lost and Found Map Tracker for UE Manila</p>
     </div>
   </header>
 
   <!-- Navigation -->
   <nav>
     <ul>
-      <li><a href="index.html">Home</a></li>
+      <li><a href="index.html" class="active">Home</a></li>
       <li><a href="report.html">Report Item</a></li>
       <li><a href="map.html">View Map</a></li>
       <li><a href="about.html">About</a></li>
     </ul>
   </nav>
 
-  <!-- Main Content -->
   <main class="container">
     <section>
-      <h2>Welcome!</h2>
-      <p>
-        This site helps students report and find lost items on campus. 
-        Use the interactive map below to check for recently reported items.
-      </p>
-    </section>
-
-    <section class="map-section">
-      <h2>Campus Map</h2>
-      <img src="img/campus-map.png" alt="Campus Map" class="campus-map">
+      <div class="card">
+        <h2>What is Warrior’s Trail?</h2>
+        <p>
+          Warrior’s Trail is the official interactive lost and found map for the University of the East Manila campus.
+          It helps students and staff locate, report, and claim lost or found belongings—all safely within UE’s campus boundaries.
+        </p>
+      </div>
+      <div class="card" style="text-align:center;">
+        <h2>Get Started</h2>
+        <a href="map.html" style="display:inline-block; margin:16px 8px; background:#B50014; color:#fff; padding:14px 30px; border-radius:6px; text-decoration:none; font-size:1.1em;">View Campus Map</a>
+        <a href="report.html" style="display:inline-block; margin:16px 8px; background:#fff; color:#B50014; padding:14px 30px; border-radius:6px; text-decoration:none; border:2px solid #B50014; font-size:1.1em;">Report Lost/Found Item</a>
+      </div>
+      <div class="card">
+        <h2>How It Works</h2>
+        <ul>
+          <li>Search for lost items on the <b>Interactive Campus Map</b>.</li>
+          <li>Report a lost or found item by pinning the exact location within the campus.</li>
+          <li>Contact owners or finders securely.</li>
+        </ul>
+      </div>
     </section>
   </main>
 
-  <!-- Footer -->
   <footer>
     <p>&copy; 2025 Warrior’s Trail | University Lost & Found System</p>
   </footer>
