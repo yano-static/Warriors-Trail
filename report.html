@@ -62,10 +62,29 @@
   <div id="reportResult"></div>
 
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <!-- Firebase SDKs for web projects (compatible, not module imports) -->
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js"></script>
   <script>
-    // Change these to your image's true pixel dimensions
-    var imgWidth = 1118; // image.jpg width in pixels
-    var imgHeight = 768; // image.jpg height in pixels
+    // Your Firebase web app's configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyCyJwAGiPmDWl6tYhm_nV_EJMkoZIrxKXg",
+      authDomain: "warriorstrail-9c05b.firebaseapp.com",
+      databaseURL: "https://warriorstrail-9c05b-default-rtdb.firebaseio.com",
+      projectId: "warriorstrail-9c05b",
+      storageBucket: "warriorstrail-9c05b.firebasestorage.app",
+      messagingSenderId: "187592091783",
+      appId: "1:187592091783:web:cb8ce312d1026e0f4fb022",
+      measurementId: "G-0LQHP3VVZN"
+    };
+    // Initialize Firebase (compatibility syntax)
+    const app = firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+    // Note: analytics is not used for form/report functions, you can add it if needed
+  </script>
+  <script>
+    var imgWidth = 1118; // campus image width
+    var imgHeight = 768; // campus image height
 
     var map = L.map('map', {
       crs: L.CRS.Simple,
@@ -91,9 +110,9 @@
     document.getElementById('itemForm').onsubmit = function(event) {
       event.preventDefault();
       let type = document.getElementById('itemType').value;
-      let name = document.getElementById('itemName').value;
-      let desc = document.getElementById('itemDesc').value;
-      let contact = document.getElementById('itemContact').value;
+      let name = document.getElementById('itemName').value.trim();
+      let desc = document.getElementById('itemDesc').value.trim();
+      let contact = document.getElementById('itemContact').value.trim();
       let lat = document.getElementById('itemLat').value;
       let lng = document.getElementById('itemLng').value;
 
@@ -102,17 +121,32 @@
         return;
       }
 
-      // Show result (you can replace this with AJAX for backend save)
-      document.getElementById('reportResult').innerHTML =
-        `<b>Report submitted!</b><br>` +
-        `Type: ${type}<br>` +
-        `Name: ${name}<br>` +
-        `Description: ${desc}<br>` +
-        `Contact: ${contact}<br>` +
-        `Pinned Location: Y=${lat}, X=${lng}`;
-      // Optionally, reset form here
-      // event.target.reset();
-      // if(marker) map.removeLayer(marker);
+      const newReport = {
+        type,
+        itemName: name,
+        description: desc,
+        contact,
+        lat: parseFloat(lat),
+        lng: parseFloat(lng),
+        timestamp: Date.now()
+      };
+
+      // Save to Firebase (auto-sync for map.html to fetch!)
+      db.ref("items").push(newReport, function(error) {
+        if (error) {
+          alert('Error submitting your report. Try again!');
+        } else {
+          document.getElementById('reportResult').innerHTML =
+            `<b>Report submitted!</b><br>` +
+            `Type: ${type}<br>` +
+            `Name: ${name}<br>` +
+            `Description: ${desc}<br>` +
+            `Contact: ${contact}<br>` +
+            `Pinned Location: Y=${lat}, X=${lng}`;
+          event.target.reset();
+          if(marker) map.removeLayer(marker);
+        }
+      });
     };
   </script>
 </body>
