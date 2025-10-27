@@ -1,153 +1,139 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Report Item | Warrior's Trail</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-  <style>
-    #map {
-      width: 100%;
-      height: 600px;
-      margin-bottom: 20px;
-    }
-    .form-control {
-      margin-bottom: 8px;
-      width: 100%;
-      box-sizing: border-box;
-      padding: 6px;
-    }
-    .leaflet-container {
-      cursor: crosshair;
-    }
-    .item-form {
-      max-width: 360px;
-      margin-bottom: 18px;
-    }
-    .item-form label {
-      font-weight: bold;
-      display: block;
-      margin-top: 8px;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report Item | Warrior's Trail</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="style.css">
+    <style>
+        #miniMap {
+            height: 400px;
+            width: 100%;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px #ddd;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: inherit;
+        }
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        .btn-submit {
+            width: 100%;
+            padding: 15px;
+            background: #B50014;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .btn-submit:hover {
+            background: #900010;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(181, 0, 20, 0.3);
+        }
+        .map-instruction {
+            background: #fff3cd;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            border-left: 4px solid #ffc107;
+        }
+    </style>
 </head>
 <body>
-  <h2>Report Lost or Found Item</h2>
-  <div>Mark campus location and submit item details below</div>
-  <div id="map"></div>
-  <form id="itemForm" class="item-form">
-    <label for="itemType">Type:</label>
-    <select id="itemType" class="form-control" required>
-      <option value="Phone">Phone</option>
-      <option value="Wallet">Wallet</option>
-      <option value="Keys">Keys</option>
-      <option value="Other">Other</option>
-    </select>
+    <header>
+        <div class="logo-container">
+            <img src="img/ue-logo.png" alt="UE Logo" class="logo" onerror="this.style.display='none'">
+            <img src="img/warriors-trail-logo.png" alt="Warriors Trail Logo" class="logo" onerror="this.style.display='none'">
+        </div>
+        <div class="header-text">
+            <h1>Warrior's Trail</h1>
+            <p class="subtitle">Lost & Found Interactive Map</p>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="map.html">View Map</a></li>
+                <li><a href="report.html" class="active">Report Item</a></li>
+                <li><a href="about.html">About</a></li>
+            </ul>
+        </nav>
+    </header>
 
-    <label for="itemName">Item Name:</label>
-    <input id="itemName" class="form-control" required />
+    <div class="container">
+        <h2>Report Lost or Found Item</h2>
+        <p>Mark campus location and submit item details below</p>
+        
+        <div class="map-instruction">
+            <strong>📍 Click on the map</strong> to mark where you lost or found the item
+        </div>
 
-    <label for="itemDesc">Description:</label>
-    <input id="itemDesc" class="form-control" />
+        <div id="miniMap"></div>
 
-    <label for="itemContact">Contact:</label>
-    <input id="itemContact" class="form-control" required />
+        <form id="reportForm">
+            <div class="form-group">
+                <label for="itemType">Type: *</label>
+                <select id="itemType" required>
+                    <option value="phone">📱 Phone</option>
+                    <option value="wallet">💼 Wallet</option>
+                    <option value="keys">🔑 Keys</option>
+                    <option value="other">📦 Other</option>
+                </select>
+            </div>
 
-    <input type="hidden" id="itemLat" />
-    <input type="hidden" id="itemLng" />
+            <div class="form-group">
+                <label for="itemName">Item Name: *</label>
+                <input type="text" id="itemName" placeholder="e.g., Black iPhone 13" required>
+            </div>
 
-    <button type="submit" class="form-control" style="background:#2d8be0;color:#fff;">Submit Report</button>
-  </form>
+            <div class="form-group">
+                <label for="description">Description:</label>
+                <textarea id="description" placeholder="Additional details about the item..."></textarea>
+            </div>
 
-  <div id="reportResult"></div>
+            <div class="form-group">
+                <label for="contact">Contact Information:</label>
+                <input type="text" id="contact" placeholder="Email or phone number">
+            </div>
 
-  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-  <!-- Firebase SDKs for web projects (compatible, not module imports) -->
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js"></script>
-  <script>
-    // Your Firebase web app's configuration
-    const firebaseConfig = {
-      apiKey: "AIzaSyCyJwAGiPmDWl6tYhm_nV_EJMkoZIrxKXg",
-      authDomain: "warriorstrail-9c05b.firebaseapp.com",
-      databaseURL: "https://warriorstrail-9c05b-default-rtdb.firebaseio.com",
-      projectId: "warriorstrail-9c05b",
-      storageBucket: "warriorstrail-9c05b.firebasestorage.app",
-      messagingSenderId: "187592091783",
-      appId: "1:187592091783:web:cb8ce312d1026e0f4fb022",
-      measurementId: "G-0LQHP3VVZN"
-    };
-    // Initialize Firebase (compatibility syntax)
-    const app = firebase.initializeApp(firebaseConfig);
-    const db = firebase.database();
-    // Note: analytics is not used for form/report functions, you can add it if needed
-  </script>
-  <script>
-    var imgWidth = 1118; // campus image width
-    var imgHeight = 768; // campus image height
+            <input type="hidden" id="lat">
+            <input type="hidden" id="lng">
 
-    var map = L.map('map', {
-      crs: L.CRS.Simple,
-      minZoom: -2,
-      maxZoom: 2,
-      zoom: 0,
-      center: [imgHeight/2, imgWidth/2]
-    });
+            <button type="submit" class="btn-submit">📤 Submit Report</button>
+        </form>
+    </div>
 
-    var bounds = [[0,0], [imgHeight, imgWidth]];
-    var image = L.imageOverlay('img/image.jpg', bounds).addTo(map);
-    map.fitBounds(bounds);
+    <footer>
+        <p>&copy; 2025 Warrior's Trail | University of the East Manila</p>
+    </footer>
 
-    var marker;
-
-    map.on('click', function(e) {
-      if(marker) map.removeLayer(marker);
-      marker = L.marker(e.latlng).addTo(map);
-      document.getElementById('itemLat').value = Math.round(e.latlng.lat);
-      document.getElementById('itemLng').value = Math.round(e.latlng.lng);
-    });
-
-    document.getElementById('itemForm').onsubmit = function(event) {
-      event.preventDefault();
-      let type = document.getElementById('itemType').value;
-      let name = document.getElementById('itemName').value.trim();
-      let desc = document.getElementById('itemDesc').value.trim();
-      let contact = document.getElementById('itemContact').value.trim();
-      let lat = document.getElementById('itemLat').value;
-      let lng = document.getElementById('itemLng').value;
-
-      if(!lat || !lng) {
-        alert('Click the map to pin the item location!');
-        return;
-      }
-
-      const newReport = {
-        type,
-        itemName: name,
-        description: desc,
-        contact,
-        lat: parseFloat(lat),
-        lng: parseFloat(lng),
-        timestamp: Date.now()
-      };
-
-      // Save to Firebase (auto-sync for map.html to fetch!)
-      db.ref("items").push(newReport, function(error) {
-        if (error) {
-          alert('Error submitting your report. Try again!');
-        } else {
-          document.getElementById('reportResult').innerHTML =
-            `<b>Report submitted!</b><br>` +
-            `Type: ${type}<br>` +
-            `Name: ${name}<br>` +
-            `Description: ${desc}<br>` +
-            `Contact: ${contact}<br>` +
-            `Pinned Location: Y=${lat}, X=${lng}`;
-          event.target.reset();
-          if(marker) map.removeLayer(marker);
-        }
-      });
-    };
-  </script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <script src="firebase-config.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
