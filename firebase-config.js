@@ -9,6 +9,13 @@ const firebaseConfig = {
   measurementId: "G-0LQHP3VVZN"
 };
 
-// initialize ngarod
-const app = firebase.initializeApp(firebaseConfig);
-const db = firebase.database();
+// Initialize Firebase with error handling
+console.log('Initializing Firebase...');
+try {
+    const app = firebase.initializeApp(firebaseConfig);
+    const db = firebase.database();
+    console.log('✅ Firebase initialized successfully');
+    console.log('📊 Database URL:', firebaseConfig.databaseURL);
+} catch (error) {
+    console.error('❌ Firebase initialization error:', error);
+}
