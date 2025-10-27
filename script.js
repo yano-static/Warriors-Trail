@@ -1,8 +1,9 @@
 // ---- Shared constants and emoji icons ----
-const UE_CENTER = [14.6070, 121.0040];
+// CORRECTED coordinates for UE Manila: 2219 C.M. Recto Avenue, Sampaloc, Manila
+const UE_CENTER = [14.6042, 120.9933];
 const UE_BOUNDS = [
-    [14.6050, 121.0020],
-    [14.6090, 121.0060]
+    [14.6020, 120.9910],
+    [14.6065, 120.9955]
 ];
 
 function createIcon(emoji) {
@@ -63,6 +64,24 @@ function speakText(text) {
     window.speechSynthesis.speak(currentUtterance);
 }
 
+// ---- Mark Item as Claimed ----
+function markAsClaimed(itemId) {
+    if (confirm('Mark this item as claimed? This action cannot be undone.')) {
+        firebase.database().ref(`items/${itemId}`).update({
+            claimed: true,
+            claimedDate: Date.now()
+        })
+        .then(() => {
+            alert('✅ Item marked as claimed!');
+            location.reload();
+        })
+        .catch(error => {
+            console.error('Error marking as claimed:', error);
+            alert('Error updating item status: ' + error.message);
+        });
+    }
+}
+
 // ---- MAP PAGE ----
 if (document.getElementById('map') && location.pathname.endsWith('map.html')) {
     console.log('Initializing map page...');
@@ -77,24 +96,38 @@ if (document.getElementById('map') && location.pathname.endsWith('map.html')) {
 
     // 2. Marker/bookkeeping arrays
     let activeReports = []; // List of visible items
-    let markers = []; // { marker, data }
+    let markers = []; // { marker, data, id }
 
     // 3. Place markers, render list, enable searching/filtering
-    function addReportMarker(report) {
+    function addReportMarker(report, itemId) {
         const icon = ICONS[report.type] || ICONS.other;
         const marker = L.marker([report.lat, report.lng], { icon }).addTo(map);
-        const time = report.timestamp ? new Date(report.timestamp).toLocaleString() : '';
         
-        const ttsText = `Lost or found item: ${report.itemName}. Type: ${report.type}. ${report.description ? 'Description: ' + report.description + '.' : ''} ${report.contact ? 'Contact: ' + report.contact + '.' : ''} Reported on ${time}.`;
+        const reportedDate = report.dateReported ? new Date(report.dateReported).toLocaleDateString() : 'N/A';
+        const timestamp = report.timestamp ? new Date(report.timestamp).toLocaleString() : '';
         
-        marker.bindPopup(`
-            <strong>${escapeHtml(report.itemName)}</strong> (${report.type})<br>
-            ${report.description ? `<p>${escapeHtml(report.description)}</p>` : ''}
-            ${report.contact ? `<p>Contact: ${escapeHtml(report.contact)}</p>` : ''}
-            <small>${time}</small><br>
-            <button class="tts-button" onclick="speakText('${escapeHtml(ttsText).replace(/'/g, "\\'")}')">🔊 Read Aloud</button>
-        `);
-        markers.push({ marker, data: report });
+        // Build TTS text
+        const ttsText = `${report.claimed ? 'Claimed item' : 'Lost or found item'}: ${report.itemName}. Type: ${report.type}. ${report.description ? 'Description: ' + report.description + '.' : ''} ${report.pickupLocation ? 'Pickup location: ' + report.pickupLocation + '.' : ''} ${report.contact ? 'Contact: ' + report.contact + '.' : ''} Date reported: ${reportedDate}. Submitted on ${timestamp}.`;
+        
+        // Build popup HTML
+        let popupHTML = `
+            <div style="min-width: 250px;">
+                <h3 style="margin: 0 0 10px 0; color: #B50014;">
+                    ${report.claimed ? '✅ ' : ''}${escapeHtml(report.itemName)}
+                </h3>
+                <p style="margin: 5px 0;"><strong>Type:</strong> ${report.type}</p>
+                ${report.description ? `<p style="margin: 5px 0;"><strong>Description:</strong> ${escapeHtml(report.description)}</p>` : ''}
+                ${report.pickupLocation ? `<p style="margin: 5px 0;"><strong>📍 Pickup/Drop-off Location:</strong> ${escapeHtml(report.pickupLocation)}</p>` : ''}
+                ${report.contact ? `<p style="margin: 5px 0;"><strong>📞 Contact:</strong> ${escapeHtml(report.contact)}</p>` : ''}
+                <p style="margin: 5px 0;"><strong>📅 Date Found/Lost:</strong> ${reportedDate}</p>
+                <p style="margin: 5px 0; font-size: 12px; color: #666;"><strong>Submitted:</strong> ${timestamp}</p>
+                ${report.claimed ? `<p style="margin: 10px 0; padding: 8px; background: #d4edda; border-radius: 4px; color: #155724;"><strong>✅ Item Claimed</strong><br><small>Claimed on ${new Date(report.claimedDate).toLocaleString()}</small></p>` : `<button onclick="markAsClaimed('${itemId}')" style="width: 100%; padding: 8px; background: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer; margin-top: 10px; font-weight: 600;">✅ Mark as Claimed</button>`}
+                <button class="tts-button" onclick="speakText('${escapeHtml(ttsText).replace(/'/g, "\\'")}')">🔊 Read Aloud</button>
+            </div>
+        `;
+        
+        marker.bindPopup(popupHTML, { maxWidth: 300 });
+        markers.push({ marker, data: report, id: itemId });
     }
 
     // Listen for Firebase data
@@ -108,8 +141,9 @@ if (document.getElementById('map') && location.pathname.endsWith('map.html')) {
 
         snapshot.forEach(child => {
             const report = child.val();
-            activeReports.push(report);
-            addReportMarker(report);
+            const itemId = child.key;
+            activeReports.push({ ...report, id: itemId });
+            addReportMarker(report, itemId);
         });
         renderList(activeReports);
     }, error => {
@@ -127,10 +161,15 @@ if (document.getElementById('map') && location.pathname.endsWith('map.html')) {
         filtered.forEach(r => {
             const li = document.createElement('li');
             li.classList.add('report-card');
+            if (r.claimed) {
+                li.style.opacity = '0.6';
+                li.style.borderLeft = '4px solid #28a745';
+            }
+            const reportedDate = r.dateReported ? new Date(r.dateReported).toLocaleDateString() : 'N/A';
             li.innerHTML = `${ICONS[r.type].options.html} 
-                <strong>${escapeHtml(r.itemName)}</strong> (${r.type})<br>
+                <strong>${r.claimed ? '✅ ' : ''}${escapeHtml(r.itemName)}</strong> (${r.type})<br>
                 ${escapeHtml(r.description || '')}<br>
-                <small>${new Date(r.timestamp).toLocaleString()}</small>`;
+                <small>📅 ${reportedDate} | Submitted: ${new Date(r.timestamp).toLocaleString()}</small>`;
             li.addEventListener('click', () => map.panTo([r.lat, r.lng]));
             list.appendChild(li);
         });
@@ -149,14 +188,16 @@ if (document.getElementById('map') && location.pathname.endsWith('map.html')) {
             const matchesQuery = q === '' || (
                 (r.itemName && r.itemName.toLowerCase().includes(q)) ||
                 (r.description && r.description.toLowerCase().includes(q)) ||
-                (r.contact && r.contact.toLowerCase().includes(q))
+                (r.contact && r.contact.toLowerCase().includes(q)) ||
+                (r.pickupLocation && r.pickupLocation.toLowerCase().includes(q))
             );
             return matchesType && matchesQuery;
         });
 
         // Hide/show markers
         markers.forEach(({ marker, data }) => {
-            if (filtered.includes(data)) marker.addTo(map);
+            const matchesFilter = filtered.some(f => f.id === data.id || (f.timestamp === data.timestamp && f.itemName === data.itemName));
+            if (matchesFilter) marker.addTo(map);
             else map.removeLayer(marker);
         });
         renderList(filtered);
@@ -206,12 +247,14 @@ if (document.getElementById('reportForm') && location.pathname.endsWith('report.
         const itemName = document.getElementById('itemName').value.trim();
         const contact = document.getElementById('contact').value.trim();
         const description = document.getElementById('description').value.trim();
+        const pickupLocation = document.getElementById('pickupLocation').value.trim();
+        const dateReported = document.getElementById('dateReported').value;
         const lat = parseFloat(latInput.value);
         const lng = parseFloat(lngInput.value);
 
         // Validation
-        if (!itemName || !lat || !lng) {
-            alert('Please provide item name and pick a location on the map.');
+        if (!itemName || !lat || !lng || !dateReported) {
+            alert('Please provide item name, date found/lost, and pick a location on the map.');
             return;
         }
 
@@ -219,10 +262,13 @@ if (document.getElementById('reportForm') && location.pathname.endsWith('report.
             type, 
             itemName, 
             contact, 
-            description, 
+            description,
+            pickupLocation,
+            dateReported,
             lat, 
             lng, 
-            timestamp: Date.now()
+            timestamp: Date.now(),
+            claimed: false
         };
 
         console.log('Submitting to Firebase:', newReport);
@@ -231,14 +277,14 @@ if (document.getElementById('reportForm') && location.pathname.endsWith('report.
         firebase.database().ref("items").push(newReport)
             .then(() => {
                 console.log('Report submitted successfully');
-                alert('Report submitted! You can view it on the Map page.');
+                alert('✅ Report submitted! You can view it on the Map page.');
                 form.reset();
                 setPicker(UE_CENTER[0], UE_CENTER[1]);
                 window.location.href = 'map.html';
             })
             .catch(error => {
                 console.error('Firebase write error:', error);
-                alert('Error submitting your report: ' + error.message);
+                alert('❌ Error submitting your report: ' + error.message);
             });
     });
 }
