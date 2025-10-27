@@ -1,7 +1,7 @@
-const UE_CENTER = [14.6021, 120.9897];
+const UE_CENTER = [14.602987, 120.990786];
 const UE_BOUNDS = [
-    [14.6005, 120.9884],
-    [14.6035, 120.9910]
+    [14.600995, 120.989191], // SW corner (Recto & Loyola)
+    [14.604805, 120.993150]  // NE corner (Delos Santos & Legarda)
 ];
 const IMAGE_BOUNDS = UE_BOUNDS;
 
@@ -29,23 +29,20 @@ function escapeHtml(s) {
 }
 
 let currentUtterance = null;
-
 function speakText(text) {
     if (!('speechSynthesis' in window)) {
         alert('Text-to-Speech is not supported in your browser.');
         return;
     }
-    if (window.speechSynthesis.speaking) {
-        window.speechSynthesis.cancel();
-    }
+    if (window.speechSynthesis.speaking) window.speechSynthesis.cancel();
     currentUtterance = new SpeechSynthesisUtterance(text);
     currentUtterance.rate = 1.0;
     currentUtterance.pitch = 1.0;
     currentUtterance.volume = 1.0;
     currentUtterance.lang = 'en-US';
-    currentUtterance.onstart = () => { console.log('TTS started'); };
-    currentUtterance.onend = () => { console.log('TTS ended'); };
-    currentUtterance.onerror = (event) => { console.error('TTS error:', event.error); };
+    currentUtterance.onstart = () => {};
+    currentUtterance.onend = () => {};
+    currentUtterance.onerror = (event) => {};
     window.speechSynthesis.speak(currentUtterance);
 }
 
@@ -60,7 +57,6 @@ function markAsClaimed(itemId) {
             location.reload();
         })
         .catch(error => {
-            console.error('Error marking as claimed:', error);
             alert('Error updating item status: ' + error.message);
         });
     }
@@ -72,7 +68,7 @@ if (document.getElementById('map') && location.pathname.endsWith('map.html')) {
         attribution: '© OpenStreetMap contributors'
     }).addTo(map);
     map.setMaxBounds(UE_BOUNDS);
-    L.imageOverlay('img/image.jpg', IMAGE_BOUNDS).addTo(map);
+    L.imageOverlay('img/image.jpg', IMAGE_BOUNDS, {opacity: 1}).addTo(map);
     map.on('drag', () => map.panInsideBounds(UE_BOUNDS, { animate: true }));
     let activeReports = [];
     let markers = [];
@@ -111,9 +107,7 @@ if (document.getElementById('map') && location.pathname.endsWith('map.html')) {
             addReportMarker(report, itemId);
         });
         renderList(activeReports);
-    }, error => {
-        console.error('Firebase read error:', error);
-    });
+    }, error => {});
     function renderList(filtered) {
         const list = document.getElementById('reportsList');
         list.innerHTML = '';
@@ -177,7 +171,7 @@ if (document.getElementById('reportForm') && location.pathname.endsWith('report.
     const miniMap = L.map('miniMap', { minZoom: 16, maxZoom: 20 }).setView(UE_CENTER, 18);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(miniMap);
     miniMap.setMaxBounds(UE_BOUNDS);
-    L.imageOverlay('img/image.jpg', IMAGE_BOUNDS).addTo(miniMap);
+    L.imageOverlay('img/image.jpg', IMAGE_BOUNDS, {opacity: 1}).addTo(miniMap);
     miniMap.on('drag', () => miniMap.panInsideBounds(UE_BOUNDS, { animate: true }));
     let pickMarker = null;
     function setPicker(lat, lng) {
