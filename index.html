@@ -1,61 +1,60 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Home | Warrior’s Trail</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home | Warrior's Trail</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <!-- Header -->
-  <header>
-    <div class="logo-container">
-      <img src="img/ue-logo.png" alt="UE Logo" class="logo">
-      <img src="img/warriors-trail-logo.png" alt="Warrior’s Trail Logo" class="logo">
+    <header>
+        <div class="logo-container">
+            <img src="img/ue-logo.png" alt="UE Logo" class="logo" onerror="this.style.display='none'">
+            <img src="img/warriors-trail-logo.png" alt="Warriors Trail Logo" class="logo" onerror="this.style.display='none'">
+        </div>
+        <div class="header-text">
+            <h1>Warrior's Trail</h1>
+            <p class="subtitle">Lost & Found Interactive Map</p>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="index.html" class="active">Home</a></li>
+                <li><a href="map.html">View Map</a></li>
+                <li><a href="report.html">Report Item</a></li>
+                <li><a href="about.html">About</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="container">
+        <div class="card">
+            <h2>What is Warrior's Trail?</h2>
+            <p>
+                Warrior's Trail is the official interactive lost and found map for the University of the East Manila campus.
+                It helps students and staff locate, report, and claim lost or found belongings—all safely within UE's campus boundaries.
+            </p>
+        </div>
+
+        <div style="text-align: center; margin: 30px 0;">
+            <h2>Get Started</h2>
+            <a href="map.html" class="action-btn">View Campus Map</a>
+            <a href="report.html" class="action-btn outlined">Report Lost/Found Item</a>
+        </div>
+
+        <div class="card">
+            <h2>How It Works</h2>
+            <ul>
+                <li>Search for lost items on the <strong>Interactive Campus Map</strong>.</li>
+                <li>Report a lost or found item by pinning the exact location within the campus.</li>
+                <li>Contact owners or finders securely.</li>
+                <li>Use the <strong>🔊 Read Aloud</strong> feature for hands-free information access.</li>
+            </ul>
+        </div>
     </div>
-    <div class="header-text">
-      <h1>Welcome to Warrior’s Trail</h1>
-      <p class="subtitle">Lost and Found Map Tracker for UE Manila</p>
-    </div>
-  </header>
 
-  <!-- Navigation -->
-  <nav>
-    <ul>
-      <li><a href="index.html" class="active">Home</a></li>
-      <li><a href="report.html">Report Item</a></li>
-      <li><a href="map.html">View Map</a></li>
-      <li><a href="about.html">About</a></li>
-    </ul>
-  </nav>
-
-  <main class="container">
-    <section>
-      <div class="card">
-        <h2>What is Warrior’s Trail?</h2>
-        <p>
-          Warrior’s Trail is the official interactive lost and found map for the University of the East Manila campus.
-          It helps students and staff locate, report, and claim lost or found belongings—all safely within UE’s campus boundaries.
-        </p>
-      </div>
-      <div class="card" style="text-align:center;">
-        <h2>Get Started</h2>
-        <a href="map.html" class="action-btn" style="background:#B50014;color:#fff;">View Campus Map</a>
-        <a href="report.html" class="action-btn outlined">Report Lost/Found Item</a>
-      </div>
-      <div class="card">
-        <h2>How It Works</h2>
-        <ul>
-          <li>Search for lost items on the <b>Interactive Campus Map</b>.</li>
-          <li>Report a lost or found item by pinning the exact location within the campus.</li>
-          <li>Contact owners or finders securely.</li>
-        </ul>
-      </div>
-    </section>
-  </main>
-
-  <footer>
-    <p>&copy; 2025 Warrior’s Trail | University Lost & Found System</p>
-  </footer>
+    <footer>
+        <p>&copy; 2025 Warrior's Trail | University of the East Manila</p>
+    </footer>
 </body>
 </html>
