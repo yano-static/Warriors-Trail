@@ -1,7 +1,7 @@
-const UE_CENTER = [14.602987, 120.990786];
+const UE_CENTER = [14.6029, 120.9911];
 const UE_BOUNDS = [
-    [14.600995, 120.989191], // SW corner (Recto & Loyola)
-    [14.604805, 120.993150]  // NE corner (Delos Santos & Legarda)
+  [14.6011, 120.9893], // Southwest corner (Recto & N. Reyes/Loyola)
+  [14.6046, 120.9927]  // Northeast corner (Delos Santos & Legarda)
 ];
 const IMAGE_BOUNDS = UE_BOUNDS;
 
@@ -40,9 +40,6 @@ function speakText(text) {
     currentUtterance.pitch = 1.0;
     currentUtterance.volume = 1.0;
     currentUtterance.lang = 'en-US';
-    currentUtterance.onstart = () => {};
-    currentUtterance.onend = () => {};
-    currentUtterance.onerror = (event) => {};
     window.speechSynthesis.speak(currentUtterance);
 }
 
@@ -68,7 +65,7 @@ if (document.getElementById('map') && location.pathname.endsWith('map.html')) {
         attribution: '© OpenStreetMap contributors'
     }).addTo(map);
     map.setMaxBounds(UE_BOUNDS);
-    L.imageOverlay('img/image.jpg', IMAGE_BOUNDS, {opacity: 1}).addTo(map);
+    L.imageOverlay('img/image.jpg', IMAGE_BOUNDS, {opacity: 0.85}).addTo(map);
     map.on('drag', () => map.panInsideBounds(UE_BOUNDS, { animate: true }));
     let activeReports = [];
     let markers = [];
@@ -171,7 +168,7 @@ if (document.getElementById('reportForm') && location.pathname.endsWith('report.
     const miniMap = L.map('miniMap', { minZoom: 16, maxZoom: 20 }).setView(UE_CENTER, 18);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(miniMap);
     miniMap.setMaxBounds(UE_BOUNDS);
-    L.imageOverlay('img/image.jpg', IMAGE_BOUNDS, {opacity: 1}).addTo(miniMap);
+    L.imageOverlay('img/image.jpg', IMAGE_BOUNDS, {opacity: 0.85}).addTo(miniMap);
     miniMap.on('drag', () => miniMap.panInsideBounds(UE_BOUNDS, { animate: true }));
     let pickMarker = null;
     function setPicker(lat, lng) {
