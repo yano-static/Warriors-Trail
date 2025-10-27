@@ -1,170 +1,170 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>View Map | Warrior’s Trail</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-  <style>
-    #map {
-      width: 100%;
-      height: 600px;
-      margin-bottom: 20px;
-    }
-    #reportsList {
-      max-height: 360px;
-      overflow-y: auto;
-      padding: 0;
-      margin: 0 0 12px 0;
-      list-style: none;
-    }
-    #reportsList li {
-      margin-bottom: 8px;
-      background: #f5f5f5;
-      border-radius: 7px;
-      padding: 7px 11px;
-      border-left: 4px solid #2d8be0;
-      cursor: pointer;
-    }
-    .filter-controls {
-      margin-bottom: 1em;
-    }
-    .filter-controls select,
-    .filter-controls input {
-      margin-right: 6px;
-      padding: 4px;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Map | Warrior's Trail</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .map-container {
+            display: flex;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        #map {
+            height: 600px;
+            flex: 2;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px #ddd;
+        }
+        .sidebar {
+            flex: 1;
+            max-height: 600px;
+            overflow-y: auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px #ddd;
+        }
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+            align-items: center;
+        }
+        #searchInput {
+            flex: 1;
+            min-width: 200px;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+        #filterType {
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+        .btn-clear {
+            padding: 10px 20px;
+            background: #B50014;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+        }
+        .btn-clear:hover {
+            background: #900010;
+        }
+        .report-card {
+            background: #faf8f8;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-left: 4px solid #B50014;
+        }
+        .report-card:hover {
+            background: #ffd6da;
+            transform: translateX(5px);
+        }
+        .report-card strong {
+            color: #B50014;
+            font-size: 16px;
+        }
+        .report-card small {
+            color: #666;
+            display: block;
+            margin-top: 5px;
+        }
+        .custom-emoji-icon {
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .tts-button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+        .tts-button:hover {
+            background: #45a049;
+        }
+        @media (max-width: 768px) {
+            .map-container {
+                flex-direction: column;
+            }
+            #map {
+                height: 400px;
+            }
+        }
+    </style>
 </head>
 <body>
-  <h2>Interactive Campus Map</h2>
-  <div>Explore reports and tagged locations across UE campus</div>
-  <div class="filter-controls">
-    <label for="filterType">Type:</label>
-    <select id="filterType">
-      <option value="all">All</option>
-      <option value="Phone">Phone</option>
-      <option value="Wallet">Wallet</option>
-      <option value="Keys">Keys</option>
-      <option value="Other">Other</option>
-    </select>
-    <input type="text" id="searchInput" placeholder="Search item name/contact/desc..." />
-    <button id="clearBtn">Clear</button>
-  </div>
-  <ul id="reportsList"></ul>
-  <div id="map"></div>
+    <header>
+        <div class="logo-container">
+            <img src="img/ue-logo.png" alt="UE Logo" class="logo" onerror="this.style.display='none'">
+            <img src="img/warriors-trail-logo.png" alt="Warriors Trail Logo" class="logo" onerror="this.style.display='none'">
+        </div>
+        <div class="header-text">
+            <h1>Warrior's Trail</h1>
+            <p class="subtitle">Lost & Found Interactive Map</p>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="map.html" class="active">View Map</a></li>
+                <li><a href="report.html">Report Item</a></li>
+                <li><a href="about.html">About</a></li>
+            </ul>
+        </nav>
+    </header>
 
-  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-  <!-- Firebase SDKs -->
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js"></script>
-  <script>
-    // Match your config exactly!
-    const firebaseConfig = {
-      apiKey: "AIzaSyCyJwAGiPmDWl6tYhm_nV_EJMkoZIrxKXg",
-      authDomain: "warriorstrail-9c05b.firebaseapp.com",
-      databaseURL: "https://warriorstrail-9c05b-default-rtdb.firebaseio.com",
-      projectId: "warriorstrail-9c05b",
-      storageBucket: "warriorstrail-9c05b.firebasestorage.app",
-      messagingSenderId: "187592091783",
-      appId: "1:187592091783:web:cb8ce312d1026e0f4fb022",
-      measurementId: "G-0LQHP3VVZN"
-    };
-    const app = firebase.initializeApp(firebaseConfig);
-    const db = firebase.database();
-  </script>
-  <script>
-    var imgWidth = 1118;
-    var imgHeight = 768;
-    var map = L.map('map', {
-      crs: L.CRS.Simple,
-      minZoom: -2,
-      maxZoom: 2,
-      zoom: 0,
-      center: [imgHeight/2, imgWidth/2]
-    });
-    var bounds = [[0,0], [imgHeight, imgWidth]];
-    var image = L.imageOverlay('img/image.jpg', bounds).addTo(map);
-    map.fitBounds(bounds);
+    <div class="container">
+        <h2>Interactive Campus Map</h2>
+        <p>Explore reports and tagged locations across UE campus</p>
+        
+        <div class="controls">
+            <input type="text" id="searchInput" placeholder="Search items...">
+            <select id="filterType">
+                <option value="all">All</option>
+                <option value="phone">Phone</option>
+                <option value="wallet">Wallet</option>
+                <option value="keys">Keys</option>
+                <option value="other">Other</option>
+            </select>
+            <button id="clearBtn" class="btn-clear">Clear</button>
+        </div>
 
-    // Emoji icons for types
-    const ICONS = {
-      Phone: '📱',
-      Wallet: '💼',
-      Keys: '🔑',
-      Other: '📦'
-    };
+        <div class="map-container">
+            <div id="map"></div>
+            <div class="sidebar">
+                <h3>Recent Reports</h3>
+                <ul id="reportsList" style="list-style: none; padding: 0;"></ul>
+            </div>
+        </div>
+    </div>
 
-    let allReports = [];
-    let markers = [];
+    <footer>
+        <p>&copy; 2025 Warrior's Trail | University of the East Manila</p>
+    </footer>
 
-    // Fetch and render items from Firebase!
-    db.ref("items").on("value", function(snapshot) {
-      // Clear previous markers/reports
-      markers.forEach(m => map.removeLayer(m));
-      markers = [];
-      allReports = [];
-      snapshot.forEach(function(child) {
-        const report = child.val();
-        allReports.push(report);
-      });
-      // Sort by date descending
-      allReports.sort((a,b) => b.timestamp - a.timestamp);
-      renderReports(allReports);
-    });
-
-    function renderReports(reports) {
-      const list = document.getElementById('reportsList');
-      list.innerHTML = '';
-      if(reports.length === 0) {
-        list.innerHTML = '<li>No reports found.</li>'; return;
-      }
-      reports.forEach((r,idx) => {
-        // Add marker
-        let marker = L.marker([r.lat, r.lng]).addTo(map);
-        marker.bindPopup(
-          `<b>${ICONS[r.type] || '📦'} ${r.itemName}</b><br>
-           <i>Type:</i> ${r.type}<br>
-           ${r.description ? `<i>Desc:</i> ${r.description}<br>` : ''}
-           <i>Contact:</i> ${r.contact}<br>
-           <i>Date:</i> ${new Date(r.timestamp).toLocaleString()}`
-        );
-        markers.push(marker);
-
-        // Add to list
-        let li = document.createElement('li');
-        li.innerHTML = ` ${ICONS[r.type] || '📦'} <b>${r.itemName}</b> (${r.type})<br>
-            ${r.description ? `${r.description}<br>` : ''}
-            <span style="color:#888;">${r.contact}, ${new Date(r.timestamp).toLocaleString()}</span>`;
-        li.onclick = () => { map.setView([r.lat, r.lng], 1); marker.openPopup(); };
-        list.appendChild(li);
-      });
-    }
-
-    // Filtering/search
-    function applyFilters() {
-      const q = (searchInput.value || '').trim().toLowerCase();
-      const type = filterType.value;
-      const filtered = allReports.filter(r => {
-        const matchesType = (type === 'all') || (r.type === type);
-        const matchesQuery = q === '' || 
-          (r.itemName && r.itemName.toLowerCase().includes(q)) ||
-          (r.description && r.description.toLowerCase().includes(q)) ||
-          (r.contact && r.contact.toLowerCase().includes(q));
-        return matchesType && matchesQuery;
-      });
-      // Remove all markers from map
-      markers.forEach(m => map.removeLayer(m));
-      markers = [];
-      // Re-render filtered
-      renderReports(filtered);
-    }
-    const filterType = document.getElementById('filterType');
-    const searchInput = document.getElementById('searchInput');
-    const clearBtn = document.getElementById('clearBtn');
-    filterType.onchange = applyFilters;
-    searchInput.oninput = applyFilters;
-    clearBtn.onclick = () => { filterType.value = 'all'; searchInput.value = ''; applyFilters(); };
-  </script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <script src="firebase-config.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
