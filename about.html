@@ -1,64 +1,74 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>About | Warrior’s Trail</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About | Warrior's Trail</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <!-- Header -->
-  <header>
-    <div class="logo-container">
-      <img src="img/ue-logo.png" alt="UE Logo" class="logo">
-      <img src="img/warriors-trail-logo.png" alt="Warrior’s Trail Logo" class="logo">
+    <header>
+        <div class="logo-container">
+            <img src="img/ue-logo.png" alt="UE Logo" class="logo" onerror="this.style.display='none'">
+            <img src="img/warriors-trail-logo.png" alt="Warriors Trail Logo" class="logo" onerror="this.style.display='none'">
+        </div>
+        <div class="header-text">
+            <h1>Warrior's Trail</h1>
+            <p class="subtitle">Lost & Found Interactive Map</p>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="map.html">View Map</a></li>
+                <li><a href="report.html">Report Item</a></li>
+                <li><a href="about.html" class="active">About</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="container">
+        <div class="card">
+            <h2>Our Mission</h2>
+            <p>
+                To empower the UE Manila community to easily recover lost belongings,
+                connect finders and owners, and keep the campus safer and friendlier for everyone.
+            </p>
+        </div>
+
+        <div class="card">
+            <h2>How does it work?</h2>
+            <ul>
+                <li>Anyone can report or search for lost and found items on campus.</li>
+                <li>All reports are limited to on-campus locations, ensuring privacy and trust.</li>
+                <li>The system updates in real-time—no app download required.</li>
+                <li>Text-to-Speech feature for accessibility and hands-free information access.</li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h2>Features</h2>
+            <ul>
+                <li><strong>Interactive Map:</strong> Visual representation of lost and found items across campus</li>
+                <li><strong>Real-time Updates:</strong> Powered by Firebase Realtime Database</li>
+                <li><strong>Search & Filter:</strong> Quickly find specific items by type or keywords</li>
+                <li><strong>Text-to-Speech:</strong> Accessibility feature using Web Speech API</li>
+                <li><strong>Mobile-Friendly:</strong> Responsive design works on all devices</li>
+            </ul>
+        </div>
+
+        <div class="card">
+            <h2>Creators & Contact</h2>
+            <ul>
+                <li>Developed by: <strong>Yano Palanas</strong> & Team</li>
+                <li>Email: yanopalanas@gmail.com</li>
+                <li>GitHub: <a href="https://github.com/yano-static/Warriors-Trail" target="_blank">yano-static/Warriors-Trail</a></li>
+            </ul>
+        </div>
     </div>
-    <div class="header-text">
-      <h1>About Warrior’s Trail</h1>
-      <p class="subtitle">Meet the team and vision behind the UE campus lost and found platform</p>
-    </div>
-  </header>
 
-  <!-- Navigation -->
-  <nav>
-    <ul>
-      <li><a href="index.html">Home</a></li>
-      <li><a href="report.html">Report Item</a></li>
-      <li><a href="map.html">View Map</a></li>
-      <li><a href="about.html" class="active">About</a></li>
-    </ul>
-  </nav>
-
-  <main class="container">
-    <section>
-      <div class="card">
-        <h2>Our Mission</h2>
-        <p>
-          To empower the UE Manila community to easily recover lost belongings,  
-          connect finders and owners, and keep the campus safer and friendlier for everyone.  
-        </p>
-      </div>
-      <div class="card">
-        <h2>How does it work?</h2>
-        <ul>
-          <li>Anyone with a UE Manila account can report or search for lost and found items.</li>
-          <li>All reports are limited to on-campus locations, ensuring privacy and trust.</li>
-          <li>The system updates in real-time—no app download required.</li>
-        </ul>
-      </div>
-      <div class="card">
-        <h2>Creators & Contact</h2>
-        <ul>
-          <li>Developed by: <b>Yano Palanas</b> & Team</li>
-          <li>Faculty Adviser: [Your Adviser]</li>
-          <li>Email: <a href="mailto:yanopalanas@gmail.com">yanopalanas@gmail.com</a></li>
-        </ul>
-      </div>
-    </section>
-  </main>
-
-  <footer>
-    <p>&copy; 2025 Warrior’s Trail | University Lost & Found System</p>
-  </footer>
+    <footer>
+        <p>&copy; 2025 Warrior's Trail | University of the East Manila</p>
+    </footer>
 </body>
 </html>
